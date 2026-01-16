@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackPS | Open Innovation & Team Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-purple: #8b5cf6;
+            --neon-cyan: #22d3ee;
+            --pitch-black: #000000;
+        }
+
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            background-color: var(--pitch-black); 
+            color: #ffffff;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations --- */
+        .reveal-left { opacity: 0; transform: translateX(-80px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-right { opacity: 0; transform: translateX(80px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-up { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-active { opacity: 1; transform: translate(0); }
+
+        @keyframes popGlow {
+            0% { transform: scale(0.5); opacity: 0; filter: drop-shadow(0 0 0px var(--neon-cyan)); }
+            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 20px var(--neon-cyan)); }
+        }
+        .pop-glow-text { opacity: 0; animation: popGlow 1.2s forwards; animation-delay: 0.3s; }
+
+        .glass-panel {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            outline: none;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            border-color: var(--neon-cyan);
+            background: rgba(34, 211, 238, 0.05);
+        }
+
+        .nav-link { position: relative; transition: 0.3s; cursor: pointer; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--neon-cyan); transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+
+        .btn-neon {
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
+            color: black; font-weight: 800; padding: 12px 24px; border-radius: 12px;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .btn-neon:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        .member-card {
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .remove-btn {
+            color: #ff4d4d;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .remove-btn:hover { color: white; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed top-0 w-full z-[100] border-b border-white/5 bg-black/50 backdrop-blur-md px-10 py-5 flex justify-between items-center">
+        <div class="text-xl font-black tracking-tighter italic">HACK<span class="text-cyan-400">PS</span></div>
+        <div class="flex gap-10 text-[10px] uppercase font-bold tracking-widest">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="problem.html" class="nav-link">Problem Statement</a>
+        </div>
+    </nav>
+
+    <section class="h-screen flex flex-col justify-center items-center text-center p-6 bg-[radial-gradient(circle_at_center,_#0a1a2e_0%,_#000_70%)]">
+        <p class="text-cyan-400 font-bold tracking-[0.5em] text-xs mb-4 uppercase">Track Deep-Dive</p>
+        <h1 class="pop-glow-text text-5xl md:text-8xl font-black mb-6 leading-none tracking-tighter uppercase">Open <br> <span class="text-white">Innovation</span></h1>
+        <div class="max-w-2xl text-gray-400 text-sm md:text-base tracking-wide leading-relaxed">
+            Unconstrained development. High-risk, high-reward. Where the "Winning Probability" depends entirely on original vision and technical execution density.
+        </div>
+        <div class="animate-bounce text-cyan-900 mt-16 font-bold tracking-tighter text-2xl">SYSTEM ARCHITECTURE ↓</div>
+    </section>
+
+    <section id="architecture" class="max-w-7xl mx-auto px-6 py-32 border-t border-white/5">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
+            <div class="text-left">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Team <span class="text-purple-500">Architecture</span></h2>
+                <p class="text-gray-500 mt-4 tracking-widest uppercase text-xs">Map your technical squad's DNA</p>
+            </div>
+            <button onclick="addMember()" class="btn-neon mt-6 md:mt-0">+ Add Member</button>
+        </div>
+
+        <div id="team-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+
+        <div class="mt-20 p-10 glass-panel border-purple-500/20 reveal-up text-center">
+            <h4 class="text-2xl font-bold text-white mb-4 italic">HackPS Synergy Evaluation</h4>
+            <p class="text-gray-400 max-w-3xl mx-auto text-sm">
+                Our system doesn't just look for "Full Stack Developers." It looks for <span class="text-cyan-400 font-bold">skill-overlap</span>. A team where the Specialist understands the Architect's API constraints has a 35% higher execution success rate.
+            </p>
+        </div>
+    </section>
+
+    <footer class="bg-black py-20 px-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
+            <div>
+                <div class="text-2xl font-black italic mb-2">HACK<span class="text-cyan-400">PS</span></div>
+                <p class="text-gray-500 text-xs tracking-widest uppercase">The Blueprint for Strategic Squads</p>
+            </div>
+            <div class="text-[10px] text-gray-600 uppercase font-medium tracking-widest">
+                © 2026 HackPS Engine. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        let memberCount = 0;
+
+        function addMember() {
+            memberCount++;
+            const container = document.getElementById('team-container');
+            
+            const card = document.createElement('div');
+            card.className = "glass-panel p-8 member-card reveal-up reveal-active";
+            card.id = `member-${memberCount}`;
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-cyan-400 font-bold tracking-tighter italic uppercase text-sm">Squad Member #${memberCount}</span>
+                    <button onclick="removeMember(${memberCount})" class="remove-btn">Remove</button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Name</label>
+                        <input type="text" placeholder="Enter Full Name" class="input-field">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Branch</label>
+                        <input type="text" placeholder="e.g. Computer Science" class="input-field">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Skills</label>
+                        <input type="text" placeholder="e.g. React, Python, ML" class="input-field">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Past Projects</label>
+                        <textarea placeholder="e.g. Smart City IoT Hub" class="input-field h-20 resize-none"></textarea>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+            scrollObserver.observe(card);
+        }
+
+        function removeMember(id) {
+            const member = document.getElementById(`member-${id}`);
+            member.style.opacity = '0';
+            member.style.transform = 'translateY(20px)';
+            setTimeout(() => member.remove(), 400);
+        }
+
+        // Initialize with 3 members
+        window.onload = () => {
+            for(let i=0; i<3; i++) addMember();
+        };
+
+        document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => scrollObserver.observe(el));
+    </script>
+</body>
+</html>

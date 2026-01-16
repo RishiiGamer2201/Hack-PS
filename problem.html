@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackPS | Problem Statement & Team Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-purple: #8b5cf6;
+            --neon-cyan: #22d3ee;
+            --pitch-black: #000000;
+        }
+
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            background-color: var(--pitch-black); 
+            color: #ffffff;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations --- */
+        .reveal-left { opacity: 0; transform: translateX(-80px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-right { opacity: 0; transform: translateX(80px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-up { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-active { opacity: 1; transform: translate(0); }
+
+        @keyframes popGlow {
+            0% { transform: scale(0.5); opacity: 0; filter: drop-shadow(0 0 0px var(--neon-purple)); }
+            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 20px var(--neon-purple)); }
+        }
+        .pop-glow-text { opacity: 0; animation: popGlow 1.2s forwards; animation-delay: 0.3s; }
+
+        .glass-panel {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            outline: none;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            border-color: var(--neon-purple);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .nav-link { position: relative; transition: 0.3s; cursor: pointer; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--neon-purple); transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+
+        .btn-neon {
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
+            color: black; font-weight: 800; padding: 12px 24px; border-radius: 12px;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .btn-neon:hover { transform: scale(1.05); filter: brightness(1.1); box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
+
+        .member-card {
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .remove-btn {
+            color: #ff4d4d;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .remove-btn:hover { color: white; text-shadow: 0 0 5px #ff4d4d; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed top-0 w-full z-[100] border-b border-white/5 bg-black/50 backdrop-blur-md px-10 py-5 flex justify-between items-center">
+        <div class="text-xl font-black tracking-tighter italic">HACK<span class="text-purple-500">PS</span></div>
+        <div class="flex gap-10 text-[10px] uppercase font-bold tracking-widest">
+            <a href="index.html" class="nav-link">home</a>
+            <a href="open.html" class="nav-link">open inovation</a>
+        </div>
+    </nav>
+
+    <section class="h-screen flex flex-col justify-center items-center text-center p-6 bg-[radial-gradient(circle_at_center,_#1a1033_0%,_#000_70%)]">
+        <p class="text-purple-400 font-bold tracking-[0.5em] text-xs mb-4 uppercase">Track Analysis</p>
+        <h1 class="pop-glow-text text-5xl md:text-8xl font-black mb-6 leading-none tracking-tighter uppercase">Problem <br> <span class="text-white">Statements</span></h1>
+        <div class="max-w-2xl text-gray-400 text-sm md:text-base tracking-wide leading-relaxed">
+            Focused execution on real-world industry challenges. Precision, scalability, and domain-depth are the primary vectors for a successful deployment.
+        </div>
+        <div class="animate-bounce text-purple-900 mt-16 font-bold tracking-tighter text-2xl">SQUAD MAPPING ↓</div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="reveal-left">
+                <h2 class="text-3xl font-bold mb-6 text-white uppercase italic tracking-tighter">The Science of <span class="text-purple-500 underline">Execution</span></h2>
+                <div class="space-y-6 text-gray-400 leading-relaxed">
+                    <p>Problem Statements are curated prompts with defined constraints. Success here isn't just about the idea—it's about how well your <strong>technical architecture</strong> aligns with the sponsor's requirements.</p>
+                    <p>Key scoring vectors: <br> 
+                        <span class="text-white">• Domain Alignment</span> <br>
+                        <span class="text-white">• Technical Feasibility</span> <br>
+                        <span class="text-white">• Integration Readiness</span>
+                    </p>
+                </div>
+            </div>
+            <div class="reveal-right glass-panel p-8 border-purple-500/20">
+                <div class="text-xs text-purple-400 font-mono mb-4">// HACKPS_EVAL_LOG: TRACK_STATEMENT</div>
+                <p class="text-xl italic text-gray-300">"In this track, constraints are not obstacles; they are the framework for perfection. Your team must be a surgical unit, not just a creative one."</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="max-w-7xl mx-auto px-6 py-32 border-t border-white/5">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
+            <div class="text-left">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Squad <span class="text-cyan-400">Architecture</span></h2>
+                <p class="text-gray-500 mt-4 tracking-widest uppercase text-xs">Analyze the technical synergy of your members</p>
+            </div>
+            <button onclick="addMember()" class="btn-neon mt-6 md:mt-0">+ Add Member</button>
+        </div>
+
+        <div id="team-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+
+        <div class="mt-20 p-10 glass-panel border-cyan-500/20 reveal-up text-center">
+            <h4 class="text-2xl font-bold text-white mb-4 italic">Execution Probability Matrix</h4>
+            <p class="text-gray-400 max-w-3xl mx-auto text-sm">
+                By mapping <span class="text-purple-400 font-bold">Past Projects</span> against the specific Problem Statement domain (FinTech, Health, AI), HackPS calculates a <span class="text-cyan-400 font-bold">Delivery Coefficient</span>. Ensure your skills cover the full spectrum of the prompt.
+            </p>
+        </div>
+    </section>
+
+    <footer class="bg-black py-20 px-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
+            <div>
+                <div class="text-2xl font-black italic mb-2">HACK<span class="text-purple-500">PS</span></div>
+                <p class="text-gray-500 text-xs tracking-widest uppercase">The Blueprint for Strategic Squads</p>
+            </div>
+            <div class="text-[10px] text-gray-600 uppercase font-medium tracking-widest text-gray-700">
+                © 2026 HackPS Engine. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        let memberCount = 0;
+
+        function addMember() {
+            memberCount++;
+            const container = document.getElementById('team-container');
+            
+            const card = document.createElement('div');
+            card.className = "glass-panel p-8 member-card reveal-up reveal-active";
+            card.id = `member-${memberCount}`;
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-purple-500 font-bold tracking-tighter italic uppercase text-sm">Engineer #${memberCount}</span>
+                    <button onclick="removeMember(${memberCount})" class="remove-btn">Remove</button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Name</label>
+                        <input type="text" placeholder="Member Name" class="input-field">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Branch</label>
+                        <input type="text" placeholder="e.g. IT / Data Science" class="input-field">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Skills</label>
+                        <input type="text" placeholder="e.g. Docker, SQL, Golang" class="input-field">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Past Projects</label>
+                        <textarea placeholder="e.g. Scalable microservices for logistics" class="input-field h-20 resize-none"></textarea>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+            scrollObserver.observe(card);
+        }
+
+        function removeMember(id) {
+            const member = document.getElementById(`member-${id}`);
+            member.style.opacity = '0';
+            member.style.transform = 'translateY(20px)';
+            setTimeout(() => member.remove(), 400);
+        }
+
+        // Initialize with default squad size
+        window.onload = () => {
+            for(let i=0; i<4; i++) addMember();
+        };
+
+        document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => scrollObserver.observe(el));
+    </script>
+</body>
+</html>
