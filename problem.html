@@ -139,13 +139,42 @@
         </div>
 
         <div id="team-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
+        </div>
 
         <div class="mt-20 p-10 glass-panel border-cyan-500/20 reveal-up text-center">
             <h4 class="text-2xl font-bold text-white mb-4 italic">Execution Probability Matrix</h4>
             <p class="text-gray-400 max-w-3xl mx-auto text-sm">
                 By mapping <span class="text-purple-400 font-bold">Past Projects</span> against the specific Problem Statement domain (FinTech, Health, AI), HackPS calculates a <span class="text-cyan-400 font-bold">Delivery Coefficient</span>. Ensure your skills cover the full spectrum of the prompt.
             </p>
+        </div>
+    </section>
+
+    <!-- MEDIA AGENT: PROBLEM STATEMENT VISUAL -->
+    <section class="max-w-6xl mx-auto px-6 pb-24">
+        <div class="glass-panel p-8 mt-10">
+            <h3 class="text-sm font-semibold tracking-[0.2em] uppercase text-cyan-400 mb-2">
+                Problem statement → Visual brief
+            </h3>
+            <p class="text-xs text-gray-400 mb-4">
+                Paste the exact sponsor problem statement plus any constraints. The Media Agent will turn it into a poster-ready visual brief (caption, scene, style).
+            </p>
+
+            <textarea
+              id="problem-ps-input"
+              class="w-full h-40 bg-black/40 border border-white/10 rounded-2xl p-3 text-xs text-gray-200 outline-none focus:border-cyan-400 resize-none"
+              placeholder="Example:
+Sponsor: Climate-tech partner
+Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk using satellite + ground sensors, with real-time anomaly alerts."
+            ></textarea>
+
+            <button
+              id="generate-ps-visual-btn"
+              class="mt-3 inline-flex items-center justify-center px-4 py-3 rounded-xl border border-purple-500/40 bg-gradient-to-r from-purple-600/60 to-cyan-400/40 text-[10px] font-bold uppercase tracking-[0.2em]"
+            >
+              🎨 Generate Problem Visual
+            </button>
+
+            <div id="ps-visual-result" class="mt-4 text-xs text-gray-300 space-y-1"></div>
         </div>
     </section>
 
@@ -162,6 +191,7 @@
     </footer>
 
     <script>
+        // Scroll reveal + squad cards
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -216,12 +246,118 @@
             setTimeout(() => member.remove(), 400);
         }
 
-        // Initialize with default squad size
         window.onload = () => {
             for(let i=0; i<4; i++) addMember();
         };
 
         document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => scrollObserver.observe(el));
+
+        // MEDIA AGENT CONFIG (same project as open.html)
+        const ONDEMAND_API_KEY = "HHmMbFemXENx1MEoRnq9RKpVRHsKnsUE";   // your key
+        const MEDIA_AGENT_ID = "agent-1768583000";                      // media tool id
+        const ENDPOINT_ID = "predefined-gemini-3.0-pro";
+
+        const FULFILLMENT_PROMPT = `You are the HackPS Media Agent.
+When the user clicks "Generate Problem Visual", you MUST return a single JSON object with a vivid poster idea for their hackathon problem and team.
+
+Use this structure exactly:
+
+{
+  "caption": "...",
+  "description": "...",
+  "style": "..."
+}
+
+Guidelines:
+
+Read the user’s latest message as the team + problem description (members, skills, time, domain, problem statement, vibe).
+
+caption: 1 short punchy title (max 12 words) that could appear as the main text on a poster.
+
+description: 2–3 sentences that describe what should appear in the image (scene, key elements, lighting, emotions, colors). Mention any important entities or themes from the problem (data, climate, fintech, healthcare, etc.).
+
+style: 1 sentence giving visual style hints (e.g. "neon cyberpunk UI dashboard, isometric, dark background, cyan and purple accents" or "clean minimal flat illustration, pastel colors, friendly tech vibe").
+
+Constraints:
+
+Do NOT explain anything outside the JSON.
+
+Do NOT add keys other than caption, description, style.
+
+Do NOT mention HackPS, JSON, or "user" inside the fields.
+
+Make the visual clearly related to the team and problem, and suitable as a hackathon poster or thumbnail.`;
+
+        async function callMediaAgent(problemText) {
+            const url = "https://api.on-demand.io/chat/v1/sessions/query";
+
+            const body = {
+                endpointId: ENDPOINT_ID,
+                query: problemText,
+                agentIds: [MEDIA_AGENT_ID],
+                responseMode: "sync",
+                modelConfigs: {
+                    fulfillmentPrompt: FULFILLMENT_PROMPT,
+                    stopSequences: [],
+                    temperature: 0.7,
+                    topP: 1,
+                    maxTokens: 600,
+                    presencePenalty: 0,
+                    frequencyPenalty: 0
+                }
+            };
+
+            const res = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    apikey: ONDEMAND_API_KEY
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok) {
+                throw new Error("OnDemand error " + res.status);
+            }
+
+            const data = await res.json();
+            const raw = data?.data?.answer || "{}";
+            return JSON.parse(raw);
+        }
+
+        document
+          .getElementById("generate-ps-visual-btn")
+          .addEventListener("click", async () => {
+            const btn = document.getElementById("generate-ps-visual-btn");
+            const out = document.getElementById("ps-visual-result");
+            const input = document.getElementById("problem-ps-input");
+
+            const text = (input.value || "").trim();
+            if (!text) {
+              out.textContent = "Please paste the problem statement before generating a visual.";
+              return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Generating…";
+            out.textContent = "Calling Media Agent…";
+
+            try {
+              const visual = await callMediaAgent(text);
+              out.innerHTML = `
+                <div class="bg-purple-500/10 border border-purple-500/30 rounded-2xl p-3 space-y-1">
+                  <div><span class="font-semibold">Caption:</span> ${visual.caption}</div>
+                  <div><span class="font-semibold">Description:</span> ${visual.description}</div>
+                  <div><span class="font-semibold">Style:</span> ${visual.style}</div>
+                </div>
+              `;
+            } catch (e) {
+              out.textContent = "Error generating visual: " + e.message;
+            } finally {
+              btn.disabled = false;
+              btn.textContent = "🎨 Generate Problem Visual";
+            }
+          });
     </script>
 </body>
 </html>
