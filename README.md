@@ -7,13 +7,11 @@ HackPS Engine is a web-based AI copilot that helps hackathon teams answer one qu
 
 It analyses team skills, time constraints, and domain fit using a set of OnDemand AI agents (including a Gemini-powered Media tool) and then surfaces strategy recommendations plus poster-ready visual briefs.
 
----
 
 ## 🚀 Live Demo
 
-`TODO: Add deployed link or Loom walkthrough`
+TODO: Add deployed link or Loom walkthrough
 
----
 
 ## 🧩 What It Solves
 
@@ -21,19 +19,18 @@ Most teams lose hours debating ideas and often pick problems that are either too
 
 HackPS Engine:
 
-- Maps **team composition** and **past projects** into a “squad architecture”.
-- Aligns that architecture with **Open Innovation ideas** and **sponsor problem statements**.
-- Generates **clear strategy explanations** and **visual briefs** so teams can spend more time building and less time guessing.
+- Maps team composition and past projects into a “squad architecture”.
+- Aligns that architecture with Open Innovation ideas and sponsor problem statements.
+- Generates clear strategy explanations and visual briefs so teams can spend more time building and less time guessing.
 
----
 
 ## ✨ Core Features
 
-- **Landing experience (index.html)**  
+- Landing experience (index.html)  
   - Neon, glassmorphism UI built with TailwindCSS and custom animations.  
   - Explains the concept of team synergy, execution probability, and dual tracks.
 
-- **Track 01 – Open Innovations (open.html)**  
+- Open Innovations (open.html)  
   - Text area for describing the team (members, stack, time) and open-ended idea.  
   - “🎨 Generate Problem Visual” button that calls an OnDemand Media agent with a Gemini-backed fulfillment prompt and returns:
     - `caption` – poster title  
@@ -41,22 +38,21 @@ HackPS Engine:
     - `style` – art direction for the visual  
   - Output is displayed as a visual brief that can be plugged into image tools.
 
-- **Track 02 – Problem Statements (problem.html)**  
+- Problem Statements (problem.html)  
   - Hero section explaining sponsor-constrained tracks and execution science.  
   - Interactive **Squad Architecture** grid where users add/remove members and log:
     - Name, branch, skills, past projects  
   - Second Media agent section that turns a sponsor’s problem statement into a visual brief (caption, description, style).
 
-- **HackPS Strategy Sidebar (index.html + script.js)**  
+- HackPS Strategy Sidebar (index.html + script.js)  
   - Floating AI chat on the main page using OnDemand `/chat/v1/sessions/query`.  
   - Users can describe their team and constraints; the agent responds with strategy text on which problem they’re likely to execute well.  
   - Typing animation, “thinking” state, and smooth scroll-reveal interactions.
 
----
 
 ## 🧱 Tech Stack
 
-- **Frontend:**  
+- Frontend:  
   - HTML5 (index.html, open.html, problem.html)  
   - Tailwind CSS via CDN + custom `styles.css` for glow, glass, and animations  
   - Vanilla JavaScript (`script.js`) for:
@@ -65,16 +61,15 @@ HackPS Engine:
     - Chat sidebar logic
     - Media agent “Generate Problem Visual” actions
 
-- **AI / Backend Services:**  
-  - Airev **OnDemand Chat API** (`/chat/v1/sessions/query`)  
-  - OnDemand **Media Agent** using **Gemini 3.0 Pro** via fulfillment prompt for structured JSON visual briefs  
+- AI / Backend Services:  
+  - Airev OnDemand Chat API (`/chat/v1/sessions/query`)  
+  - OnDemand Media Agent using Gemini 3.0 Pro via fulfillment prompt for structured JSON visual briefs  
   - Endpoints and agent IDs configured directly in the frontend for hackathon demo purposes (would be proxied behind a backend in production).
 
----
 
 ## 🛠️ Local Setup
 
-1. **Clone the repository**
+1. Clone the repository
 
    ```bash
    git clone https://github.com/your-username/hackps-engine.git
