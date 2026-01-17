@@ -1,5 +1,6 @@
 ```markdown
-# Cracking Hackathon
+# Cracking Hackathon 
+      - a single stop problem for your hackathon worries 
 
 HackPS Engine is a web-based AI copilot that helps hackathon teams answer one question:
 
