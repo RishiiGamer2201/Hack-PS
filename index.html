@@ -42,7 +42,7 @@
             to { text-shadow: 0 0 25px rgba(139, 92, 246, 0.9), 0 0 45px rgba(139, 92, 246, 0.4); }
         }
 
-        /* --- PRESERVED ORIGINAL FEATURES --- */
+        /* --- TYPING ANIMATIONS --- */
         .typing-container {
             display: flex;
             flex-direction: column;
@@ -56,11 +56,11 @@
         .typing-active .line-2 { animation: typing 0.7s steps(20, end) forwards; animation-delay: 0.5s; }
         @keyframes typing { from { width: 0 } to { width: 100% } }
 
+        /* --- REVEAL ANIMATIONS --- */
         .reveal-left { opacity: 0; transform: translateX(-150px); transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal-right { opacity: 0; transform: translateX(150px); transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal-active { opacity: 1; transform: translateX(0); }
 
-        /* --- BUTTON UI ENHANCEMENTS --- */
         .glass-panel {
             background: rgba(15, 15, 15, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -84,7 +84,6 @@
             cursor: pointer;
         }
 
-        /* Interaction Colors */
         .card-cyan:hover { border-color: var(--neon-cyan); box-shadow: 0 0 30px rgba(34, 211, 238, 0.15); transform: translateY(-5px); }
         .btn-cyan:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 20px var(--neon-cyan); }
         
@@ -97,6 +96,10 @@
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 10px; }
+
+        /* Sidebar State */
+        #ai-agent-sidebar.translate-x-full { transform: translateX(100%); }
+        #ai-agent-sidebar { transform: translateX(0); }
     </style>
 </head>
 <body>
@@ -149,14 +152,13 @@
 
     <section id="dual-track" class="max-w-7xl mx-auto px-6 py-32">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-            
             <div class="glass-panel card-cyan p-10 reveal-left flex flex-col h-full">
                 <div class="mb-8">
                     <span class="text-[10px] text-cyan-400 font-bold tracking-[0.3em] uppercase">Track 01</span>
                     <h2 class="text-4xl font-black text-white uppercase italic mt-2 tracking-tighter">Open <br><span class="text-cyan-400">Innovation</span></h2>
                 </div>
                 <div class="space-y-4 text-gray-400 text-sm md:text-base leading-relaxed flex-grow">
-                    <p>The Open Innovation track is the ultimate playground for creative freedom. It invites participants to identify their own challenges and build solutions without constraints.</p>
+                    <p>Creative freedom playground. Build without constraints.</p>
                 </div>
                 <a href="open.html" class="action-button btn-cyan text-center">Explore Innovations</a>
             </div>
@@ -167,21 +169,45 @@
                     <h2 class="text-4xl font-black text-white uppercase italic mt-2 tracking-tighter">Problem <br><span class="text-purple-500">Statement</span></h2>
                 </div>
                 <div class="space-y-4 text-gray-400 text-sm md:text-base leading-relaxed flex-grow">
-                    <p>Problem Statements are the heartbeat of focused hackathons, curated by sponsors to solve high-stakes, real-world issues.</p>
+                    <p>Focused, real-world issues curated by industry sponsors.</p>
                 </div>
                 <a href="problem.html" class="action-button btn-purple text-center">View Statements</a>
             </div>
-
         </div>
     </section>
 
-    <footer class="bg-black py-10 px-10 border-t border-white/5 text-center">
-        <div class="text-[10px] text-gray-600 uppercase font-medium tracking-widest">
-            © 2026 HackPS Engine. Infinite Animation Mode Active.
-        </div>
+    <footer class="bg-black py-10 px-10 border-t border-white/5 text-center text-[10px] text-gray-600 uppercase font-medium tracking-widest">
+        © 2026 HackPS Engine. Powered by OnDemand AI.
     </footer>
 
+    <div id="ai-agent-sidebar" class="fixed top-0 right-0 w-80 md:w-96 h-full glass-panel translate-x-full border-l border-cyan-500/30 p-6 flex flex-col z-[150] transition-transform duration-500 shadow-2xl rounded-none md:rounded-l-3xl">
+        <div class="flex justify-between items-center mb-6">
+            <h4 class="text-xl font-bold text-cyan-400 italic">HackPS Agent</h4>
+            <button onclick="toggleAgent()" class="text-gray-500 hover:text-white transition">✕</button>
+        </div>
+        <div id="agent-chat" class="flex-1 overflow-y-auto space-y-4 text-xs pr-2 scroll-smooth">
+            <div class="bg-white/5 p-3 rounded-lg text-gray-400 italic">
+                "Strategy is the art of closing skill gaps." Describe your team & time and I’ll estimate where you can actually win.
+            </div>
+        </div>
+        <div class="mt-auto pt-4 border-t border-white/10">
+            <input type="text" id="agent-input" placeholder="e.g. 3 members, 24h, ML + React" class="bg-[#0a0a0a] border border-[#222] p-3 rounded-xl w-full text-xs text-white mb-2 outline-none focus:border-cyan-400" />
+            <button id="agent-send-btn" onclick="sendMessage()" class="action-button btn-cyan w-full py-2 text-xs mt-0">
+                Analyze
+            </button>
+        </div>
+    </div>
+
+    <button onclick="toggleAgent()" class="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-cyan-400 flex items-center justify-center z-[140] hover:scale-110 transition-transform shadow-xl">
+        <span class="text-black font-black">AI</span>
+    </button>
+
     <script>
+        // --- API CONFIG ---
+        const ONDEMAND_API_KEY = "HHmMbFemXENx1MEoRnq9RKpVRHsKnsUE";
+        const BOT_ID = "6969ecc90cac070971e52ae0";
+
+        // --- SCROLL REVEAL ---
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -198,9 +224,66 @@
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.reveal-left, .reveal-right, #hero-trigger').forEach(el => {
-            scrollObserver.observe(el);
-        });
+        document.querySelectorAll('.reveal-left, .reveal-right, #hero-trigger').forEach(el => scrollObserver.observe(el));
+
+        // --- AI CHAT LOGIC ---
+        function toggleAgent() {
+            document.getElementById('ai-agent-sidebar').classList.toggle('translate-x-full');
+        }
+
+        async function callOnDemand(message) {
+            const url = "https://api.on-demand.io/chat/v1/sessions/query";
+            const body = {
+                query: message,
+                endpointId: "predefined-openai-gpt4.1-nano",
+                responseMode: "sync",
+                botId: BOT_ID,
+                contextVariables: [{ key: "source", value: "HackPS-frontend" }]
+            };
+
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", apikey: ONDEMAND_API_KEY },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok) throw new Error("API Status: " + res.status);
+            const data = await res.json();
+            return data?.data?.answer ?? data?.data?.statusLogs?.[data.data.statusLogs.length - 1]?.answer ?? "Synthesis failed.";
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("agent-input");
+            const chat = document.getElementById("agent-chat");
+            const btn = document.getElementById("agent-send-btn");
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Add User Bubble
+            chat.innerHTML += `<div class="bg-cyan-500/10 p-3 rounded-lg text-white ml-8 text-right border border-cyan-500/20">${text}</div>`;
+            input.value = "";
+            chat.scrollTop = chat.scrollHeight;
+
+            // Thinking State
+            const tid = "thinking-" + Date.now();
+            chat.innerHTML += `<div id="${tid}" class="bg-purple-500/5 p-3 rounded-lg border border-purple-500/10 text-gray-400 text-xs italic animate-pulse">HackPS Agent is synthesizing team DNA...</div>`;
+            chat.scrollTop = chat.scrollHeight;
+            btn.disabled = true;
+
+            try {
+                const reply = await callOnDemand(text);
+                document.getElementById(tid).remove();
+                chat.innerHTML += `<div class="bg-purple-500/10 p-3 rounded-lg border border-purple-500/20 text-gray-300 text-xs"><strong>Strategy:</strong> ${reply}</div>`;
+            } catch (e) {
+                document.getElementById(tid).remove();
+                chat.innerHTML += `<div class="bg-red-500/10 p-3 rounded-lg border border-red-500/20 text-red-300">Connection Error: ${e.message}</div>`;
+            }
+
+            btn.disabled = false;
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        document.getElementById('agent-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') sendMessage(); });
     </script>
 </body>
 </html>
