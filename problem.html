@@ -112,27 +112,34 @@
         <div class="animate-bounce text-purple-900 mt-16 font-bold tracking-tighter text-2xl">SQUAD MAPPING ↓</div>
     </section>
 
-    <section class="max-w-6xl mx-auto px-6 py-20">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div class="reveal-left">
-                <h2 class="text-3xl font-bold mb-6 text-white uppercase italic tracking-tighter">The Science of <span class="text-purple-500 underline">Execution</span></h2>
-                <div class="space-y-6 text-gray-400 leading-relaxed">
-                    <p>Problem Statements are curated prompts with defined constraints. Success here isn't just about the idea—it's about how well your <strong>technical architecture</strong> aligns with the sponsor's requirements.</p>
-                    <p>Key scoring vectors: <br> 
-                        <span class="text-white">• Domain Alignment</span> <br>
-                        <span class="text-white">• Technical Feasibility</span> <br>
-                        <span class="text-white">• Integration Readiness</span>
-                    </p>
+    <section class="max-w-7xl mx-auto px-6 py-10 reveal-up">
+        <div class="glass-panel p-8 border-cyan-500/30">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="flex-1">
+                    <h3 class="text-lg font-black italic uppercase tracking-tighter mb-1">Problem <span class="text-cyan-400">Master Source</span></h3>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-widest">Select central reference for the squad</p>
                 </div>
-            </div>
-            <div class="reveal-right glass-panel p-8 border-purple-500/20">
-                <div class="text-xs text-purple-400 font-mono mb-4">// HACKPS_EVAL_LOG: TRACK_STATEMENT</div>
-                <p class="text-xl italic text-gray-300">"In this track, constraints are not obstacles; they are the framework for perfection. Your team must be a surgical unit, not just a creative one."</p>
+                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                    <select id="source-type" class="input-field md:w-48 border-cyan-500/20" onchange="toggleSourceInput()">
+                        <option value="url">URL Link</option>
+                        <option value="pdf">PDF Document</option>
+                    </select>
+                    <div id="url-input-container" class="w-full md:w-96">
+                        <input type="url" placeholder="https://challenge-details-link.com" class="input-field border-cyan-500/20">
+                    </div>
+                    <div id="pdf-input-container" class="w-full md:w-96 hidden">
+                        <label for="master-pdf" class="flex items-center justify-between input-field cursor-pointer hover:bg-white/5 border-cyan-500/20">
+                            <span id="pdf-label" class="text-gray-400">Upload Problem Statement</span>
+                            <span class="text-cyan-400 font-bold text-[10px]">SELECT PDF</span>
+                        </label>
+                        <input type="file" id="master-pdf" class="hidden" accept=".pdf" onchange="updatePdfLabel()">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="architecture" class="max-w-7xl mx-auto px-6 py-32 border-t border-white/5">
+    <section id="architecture" class="max-w-7xl mx-auto px-6 py-20 border-t border-white/5">
         <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
             <div class="text-left">
                 <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Squad <span class="text-cyan-400">Architecture</span></h2>
@@ -205,6 +212,30 @@ Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk 
     </footer>
 
     <script>
+        // --- SOURCE TOGGLE LOGIC ---
+        function toggleSourceInput() {
+            const type = document.getElementById('source-type').value;
+            const urlContainer = document.getElementById('url-input-container');
+            const pdfContainer = document.getElementById('pdf-input-container');
+            
+            if (type === 'url') {
+                urlContainer.classList.remove('hidden');
+                pdfContainer.classList.add('hidden');
+            } else {
+                urlContainer.classList.add('hidden');
+                pdfContainer.classList.remove('hidden');
+            }
+        }
+
+        function updatePdfLabel() {
+            const fileInput = document.getElementById('master-pdf');
+            const label = document.getElementById('pdf-label');
+            if (fileInput.files.length > 0) {
+                label.innerText = fileInput.files[0].name;
+                label.classList.add('text-cyan-400');
+            }
+        }
+
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -251,6 +282,10 @@ Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk 
                             ${sOptions}
                         </select>
                     </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-bold text-purple-400 mb-1 block tracking-widest">Portfolio / Resume Link</label>
+                        <input type="url" placeholder="https://linkedin.com/in/user" class="input-field border-purple-500/20">
+                    </div>
                 </div>
             `;
             
@@ -292,13 +327,11 @@ Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk 
             error.classList.add('hidden');
             matrix.classList.remove('hidden');
 
-            // Logic: Branch/Skill alignment
             let totalSynergy = 0;
             let analysisHtml = "";
             
             members.forEach(m => {
-                let mScore = 70; // Base
-                // If branch doesn't typically match skill (e.g. Mech student doing Blockchain)
+                let mScore = 70; 
                 if((m.branch.includes("Mechanical") || m.branch.includes("Civil")) && (m.skill === "AI / ML Engineer" || m.skill === "Blockchain")) {
                     mScore = 45;
                 } else if(m.branch.includes("CS") || m.branch.includes("Data Science")) {
