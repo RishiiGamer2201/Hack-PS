@@ -16,13 +16,16 @@ https://rishiigamer2201.github.io/Hack-PS/
 
 ## 🧩 What It Solves
 
-Most teams lose hours debating ideas and often pick problems that are either too ambitious for the timebox or misaligned with their actual skills. That leads to rushed architectures, half-finished demos, and submissions that are hard for judges to understand.
+Most teams lose hours debating ideas and often pick problems that are either too ambitious for the
+timebox or misaligned with their actual skills. That leads to rushed architectures, half-finished demos,
+and submissions that are hard for judges to understand.
 
 HackPS Engine:
 
 - Maps team composition and past projects into a “squad architecture”.
 - Aligns that architecture with Open Innovation ideas and sponsor problem statements.
-- Generates clear strategy explanations and visual briefs so teams can spend more time building and less time guessing.
+- Generates clear strategy explanations and visual briefs so teams can spend more time building and less time
+ guessing.
 
 
 ## ✨ Core Features
@@ -33,7 +36,8 @@ HackPS Engine:
 
 - Open Innovations (open.html)  
   - Text area for describing the team (members, stack, time) and open-ended idea.  
-  - “🎨 Generate Problem Visual” button that calls an OnDemand Media agent with a Gemini-backed fulfillment prompt and returns:
+  - “🎨 Generate Problem Visual” button that calls an OnDemand Media agent with a Gemini-backed
+      fulfillment prompt and returns:
     - `caption` – poster title  
     - `description` – vivid scene description  
     - `style` – art direction for the visual  
@@ -43,11 +47,13 @@ HackPS Engine:
   - Hero section explaining sponsor-constrained tracks and execution science.  
   - Interactive **Squad Architecture** grid where users add/remove members and log:
     - Name, branch, skills, past projects  
-  - Second Media agent section that turns a sponsor’s problem statement into a visual brief (caption, description, style).
+  - Second Media agent section that turns a sponsor’s problem statement into a visual brief
+    (caption, description, style).
 
 - HackPS Strategy Sidebar (index.html + script.js)  
   - Floating AI chat on the main page using OnDemand `/chat/v1/sessions/query`.  
-  - Users can describe their team and constraints; the agent responds with strategy text on which problem they’re likely to execute well.  
+  - Users can describe their team and constraints; the agent responds with strategy
+    text on which problem they’re likely to execute well.  
   - Typing animation, “thinking” state, and smooth scroll-reveal interactions.
 
 
@@ -65,7 +71,8 @@ HackPS Engine:
 - AI / Backend Services:  
   - Airev OnDemand Chat API (`/chat/v1/sessions/query`)  
   - OnDemand Media Agent using Gemini 3.0 Pro via fulfillment prompt for structured JSON visual briefs  
-  - Endpoints and agent IDs configured directly in the frontend for hackathon demo purposes (would be proxied behind a backend in production).
+  - Endpoints and agent IDs configured directly in the frontend for hackathon demo purposes
+    (would be proxied behind a backend in production).
 
 
 ## 🛠️ Local Setup
@@ -87,7 +94,8 @@ HackPS Engine:
    const ENDPOINT_ID = "predefined-gemini-3.0-pro"; // or your deployed endpoint
    ```
 
-   > For a real deployment, move these calls into a backend; exposing keys in the frontend here is acceptable only for hackathon demo use.
+   > For a real deployment, move these calls into a backend; exposing keys in the frontend here is acceptable only
+     for hackathon demo use.
 
 3. **Run locally**
 
@@ -108,17 +116,20 @@ HackPS Engine:
 4. **Test the flows**
 
    - On **index.html**, open the AI sidebar, describe your team, and click **Analyze**.  
-   - On **open.html**, describe your open-ended idea and click **Generate Problem Visual** to get a caption/description/style brief.  
+   - On **open.html**, describe your open-ended idea and click **Generate Problem Visual** to get
+     a caption/description/style brief.  
    - On **problem.html**, paste a sponsor problem statement and generate another visual brief.
 
 ---
 
 ## 🧠 Architecture Overview
 
-- **Presentation Layer** – Three pages (`index`, `open`, `problem`) share a consistent visual language (neon cyberpunk, glass panels, radial gradients) implemented with Tailwind utility classes plus custom CSS.
+- **Presentation Layer** – Three pages (`index`, `open`, `problem`) share a consistent visual language
+   (neon cyberpunk, glass panels, radial gradients) implemented with Tailwind utility classes plus custom CSS.
 - **Agent Layer (OnDemand)**  
   - Strategy agent: receives free-form team description and returns planning advice.  
-  - Media agent: receives team/problem text and uses a strict fulfillment prompt to return structured JSON with `caption`, `description`, and `style`.  
+  - Media agent: receives team/problem text and uses a strict fulfillment prompt to return structured JSON
+     with `caption`, `description`, and `style`.  
 - **Interaction Layer (script.js + inline scripts)**  
   - Fetch wrappers around OnDemand endpoints.  
   - JSON parsing + error handling to render friendly UI states.  
@@ -128,9 +139,11 @@ HackPS Engine:
 
 ## 🚧 Limitations & Future Work
 
-- API keys are stored in the frontend for speed during the hackathon; a production version would proxy all AI calls through a secure backend.
+- API keys are stored in the frontend for speed during the hackathon; a production version would proxy all AI calls through a
+  secure backend.
 - The strategy and media agents currently assume English input; adding multilingual support would make it more inclusive.
-- Visual briefs are text-only; the next step is wiring them directly into a Gemini image-generation endpoint and rendering preview images inline.
+- Visual briefs are text-only; the next step is wiring them directly into a Gemini image-generation endpoint and rendering preview
+  images inline.
 
 ---
 
