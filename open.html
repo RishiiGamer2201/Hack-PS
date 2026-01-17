@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HackPS | Problem Statement & Team Architecture</title>
+    <title>HackPS | Open Innovation & Team Architecture</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -21,15 +21,13 @@
             overflow-x: hidden;
         }
 
-        /* --- Animations --- */
         .reveal-left { opacity: 0; transform: translateX(-80px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
-        .reveal-right { opacity: 0; transform: translateX(80px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal-up { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
         .reveal-active { opacity: 1; transform: translate(0); }
 
         @keyframes popGlow {
-            0% { transform: scale(0.5); opacity: 0; filter: drop-shadow(0 0 0px var(--neon-purple)); }
-            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 20px var(--neon-purple)); }
+            0% { transform: scale(0.5); opacity: 0; filter: drop-shadow(0 0 0px var(--neon-cyan)); }
+            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 20px var(--neon-cyan)); }
         }
         .pop-glow-text { opacity: 0; animation: popGlow 1.2s forwards; animation-delay: 0.3s; }
 
@@ -44,321 +42,365 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
-            padding: 10px;
+            padding: 12px;
             border-radius: 12px;
             font-size: 0.8rem;
             outline: none;
             transition: 0.3s;
             width: 100%;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            cursor: pointer;
         }
 
-        .input-field:focus {
-            border-color: var(--neon-purple);
-            background: rgba(139, 92, 246, 0.05);
-        }
+        .input-field:focus { border-color: var(--neon-cyan); background-color: rgba(34, 211, 238, 0.05); }
+        option { background-color: #0f0f0f; color: white; }
 
         .nav-link { position: relative; transition: 0.3s; cursor: pointer; }
-        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--neon-purple); transition: 0.3s; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--neon-cyan); transition: 0.3s; }
         .nav-link:hover::after { width: 100%; }
 
         .btn-neon {
             background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
             color: black; font-weight: 800; padding: 12px 24px; border-radius: 12px;
             text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.75rem; border: none;
         }
-        .btn-neon:hover { transform: scale(1.05); filter: brightness(1.1); box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
+        .btn-neon:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-        .member-card {
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.4s;
-            position: relative;
-        }
-
-        .remove-btn {
-            color: #ff4d4d;
-            font-size: 0.7rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .remove-btn:hover { color: white; text-shadow: 0 0 5px #ff4d4d; }
+        .member-card { border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
+        .remove-btn { color: #ff4d4d; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        .progress-bar { transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1); }
 
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <nav class="fixed top-0 w-full z-[100] border-b border-white/5 bg-black/50 backdrop-blur-md px-10 py-5 flex justify-between items-center">
-        <div class="text-xl font-black tracking-tighter italic">HACK<span class="text-purple-500">PS</span></div>
+        <div class="text-xl font-black tracking-tighter italic">HACK<span class="text-cyan-400">PS</span></div>
         <div class="flex gap-10 text-[10px] uppercase font-bold tracking-widest">
-            <a href="index.html" class="nav-link">home</a>
-            <a href="problem.html" class="nav-link">problem statement</a>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="problem.html" class="nav-link">Problem Statement</a>
         </div>
     </nav>
 
-    <section class="h-screen flex flex-col justify-center items-center text-center p-6 bg-[radial-gradient(circle_at_center,_#1a1033_0%,_#000_70%)]">
-        <p class="text-purple-400 font-bold tracking-[0.5em] text-xs mb-4 uppercase">Track Analysis</p>
-        <h1 class="pop-glow-text text-5xl md:text-8xl font-black mb-6 leading-none tracking-tighter uppercase">Problem <br> <span class="text-white">Statements</span></h1>
+    <section class="h-screen flex flex-col justify-center items-center text-center p-6 bg-[radial-gradient(circle_at_center,_#0a1a2e_0%,_#000_70%)]">
+        <p class="text-cyan-400 font-bold tracking-[0.5em] text-xs mb-4 uppercase">Track Deep-Dive</p>
+        <h1 class="pop-glow-text text-5xl md:text-8xl font-black mb-6 leading-none tracking-tighter uppercase">Open <br> <span class="text-white">Innovation</span></h1>
         <div class="max-w-2xl text-gray-400 text-sm md:text-base tracking-wide leading-relaxed">
-            Focused execution on real-world industry challenges. Precision, scalability, and domain-depth are the primary vectors for a successful deployment.
+            Unconstrained development. High-risk, high-reward. Where technical synergy determines the blueprint of success.
         </div>
-        <div class="animate-bounce text-purple-900 mt-16 font-bold tracking-tighter text-2xl">SQUAD MAPPING ↓</div>
-    </section>
-
-    <section class="max-w-6xl mx-auto px-6 py-20">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div class="reveal-left">
-                <h2 class="text-3xl font-bold mb-6 text-white uppercase italic tracking-tighter">The Science of <span class="text-purple-500 underline">Execution</span></h2>
-                <div class="space-y-6 text-gray-400 leading-relaxed">
-                    <p>Problem Statements are curated prompts with defined constraints. Success here isn't just about the idea—it's about how well your <strong>technical architecture</strong> aligns with the sponsor's requirements.</p>
-                    <p>Key scoring vectors: <br> 
-                        <span class="text-white">• Domain Alignment</span> <br>
-                        <span class="text-white">• Technical Feasibility</span> <br>
-                        <span class="text-white">• Integration Readiness</span>
-                    </p>
-                </div>
-            </div>
-            <div class="reveal-right glass-panel p-8 border-purple-500/20">
-                <div class="text-xs text-purple-400 font-mono mb-4">// HACKPS_EVAL_LOG: TRACK_STATEMENT</div>
-                <p class="text-xl italic text-gray-300">"In this track, constraints are not obstacles; they are the framework for perfection. Your team must be a surgical unit, not just a creative one."</p>
-            </div>
-        </div>
+        <div class="animate-bounce text-cyan-900 mt-16 font-bold tracking-tighter text-2xl">SYSTEM ARCHITECTURE ↓</div>
     </section>
 
     <section id="architecture" class="max-w-7xl mx-auto px-6 py-32 border-t border-white/5">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
+        
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal-up">
             <div class="text-left">
-                <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Squad <span class="text-cyan-400">Architecture</span></h2>
-                <p class="text-gray-500 mt-4 tracking-widest uppercase text-xs">Analyze the technical synergy of your members</p>
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Team <span class="text-purple-500">Architecture</span></h2>
+                <p class="text-gray-500 mt-4 tracking-widest uppercase text-xs">Map your technical squad's DNA</p>
             </div>
             <button onclick="addMember()" class="btn-neon mt-6 md:mt-0">+ Add Member</button>
         </div>
 
-        <div id="team-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="mb-12 max-w-sm reveal-up">
+            <label class="text-[10px] uppercase font-bold text-cyan-400 mb-2 block tracking-widest">Target Innovation Domain</label>
+            <select id="domain-selector" class="input-field">
+                <option value="General Innovation">General Innovation</option>
+                <option value="AI-powered platform for AI for Healthcare">Healthcare</option>
+                <option value="Predictive platform for FinTech Innovation">FinTech & Digital Economy</option>
+                <option value="Sustainability & Clean Energy">Sustainability & Clean Energy</option>
+                <option value="Cybersecurity & Infrastructure">Cybersecurity & Infrastructure</option>
+                <option value="AI-powered service for EdTech Platforms">EdTech & Learning Systems</option>
+            </select>
         </div>
 
-        <div class="mt-20 p-10 glass-panel border-cyan-500/20 reveal-up text-center">
-            <h4 class="text-2xl font-bold text-white mb-4 italic">Execution Probability Matrix</h4>
-            <p class="text-gray-400 max-w-3xl mx-auto text-sm">
-                By mapping <span class="text-purple-400 font-bold">Past Projects</span> against the specific Problem Statement domain (FinTech, Health, AI), HackPS calculates a <span class="text-cyan-400 font-bold">Delivery Coefficient</span>. Ensure your skills cover the full spectrum of the prompt.
+        <div id="team-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></div>
+
+        <div id="synergy-panel" class="p-10 glass-panel border-cyan-500/20 reveal-up relative overflow-hidden hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]"></div>
+            
+            <div class="flex flex-col lg:flex-row justify-between items-start gap-12">
+                <div class="flex-1 space-y-6">
+                    <div>
+                        <h4 class="text-3xl font-black text-white mb-2 italic uppercase tracking-tighter">Squad <span class="text-purple-500">Synergy Matrix</span></h4>
+                        <p class="text-gray-400 text-sm tracking-wide leading-relaxed max-w-xl">
+                            Our neural engine has parsed your team's technical DNA. Here is your architectural breakdown:
+                        </p>
+                    </div>
+                    
+                    <div id="synergy-analysis" class="bg-white/5 p-6 rounded-2xl border border-white/10 text-xs leading-relaxed text-gray-300">
+                        </div>
+                </div>
+                
+                <div class="flex flex-row lg:flex-col items-center lg:items-end gap-10 min-w-[200px]">
+                    <div class="text-right">
+                        <div class="text-[10px] uppercase text-gray-500 font-bold tracking-[0.3em] mb-1">Efficiency Score</div>
+                        <div id="synergy-score-display" class="text-6xl font-black text-cyan-400 drop-shadow-neon">0%</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] uppercase text-gray-500 font-bold tracking-[0.3em] mb-1">Squad Status</div>
+                        <div id="synergy-strength-display" class="text-2xl font-black italic text-white uppercase tracking-tighter">UNDEFINED</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10">
+                <div class="flex justify-between text-[9px] uppercase font-bold tracking-widest text-gray-600 mb-2">
+                    <span>Operational Capacity</span>
+                    <span id="capacity-val">0%</span>
+                </div>
+                <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div id="synergy-bar" class="h-full bg-gradient-to-r from-purple-600 via-cyan-400 to-purple-600 w-0 progress-bar shadow-[0_0_20px_rgba(34,211,238,0.3)]"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center reveal-up">
+            <p id="error-msg" class="text-red-500 text-xs font-bold uppercase tracking-widest mb-4 opacity-0 transition-opacity">
+                ⚠ Please complete all selection fields
             </p>
+            <button onclick="predictStatements()" class="btn-neon px-12 py-4 text-sm">Generate Neural Predictions</button>
         </div>
     </section>
 
-    <!-- MEDIA AGENT: PROBLEM STATEMENT VISUAL -->
-    <section class="max-w-6xl mx-auto px-6 pb-24">
-        <div class="glass-panel p-8 mt-10">
-            <h3 class="text-sm font-semibold tracking-[0.2em] uppercase text-cyan-400 mb-2">
-                Problem statement → Visual brief
-            </h3>
-            <p class="text-xs text-gray-400 mb-4">
-                Paste the exact sponsor problem statement plus any constraints. The Media Agent will turn it into a poster-ready visual brief (caption, scene, style).
-            </p>
-
-            <textarea
-              id="problem-ps-input"
-              class="w-full h-40 bg-black/40 border border-white/10 rounded-2xl p-3 text-xs text-gray-200 outline-none focus:border-cyan-400 resize-none"
-              placeholder="Example:
-Sponsor: Climate-tech partner
-Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk using satellite + ground sensors, with real-time anomaly alerts."
-            ></textarea>
-
-            <button
-              id="generate-ps-visual-btn"
-              class="mt-3 inline-flex items-center justify-center px-4 py-3 rounded-xl border border-purple-500/40 bg-gradient-to-r from-purple-600/60 to-cyan-400/40 text-[10px] font-bold uppercase tracking-[0.2em]"
-            >
-              🎨 Generate Problem Visual
-            </button>
-
-            <div id="ps-visual-result" class="mt-4 text-xs text-gray-300 space-y-1"></div>
+    <section id="prediction-section" class="max-w-7xl mx-auto px-6 py-20 hidden border-t border-white/5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <h3 class="text-2xl font-black italic uppercase text-cyan-400 mb-8 text-left">Top 5 Neural Picks</h3>
+                <div id="top-5-container" class="space-y-4"></div>
+            </div>
+            <div>
+                <h3 class="text-2xl font-black italic uppercase text-purple-500 mb-8 text-left">Extended Suggestions</h3>
+                <div id="suggestions-container" class="grid grid-cols-1 gap-2"></div>
+            </div>
         </div>
     </section>
 
-    <footer class="bg-black py-20 px-10 border-t border-white/5">
+    <div id="modal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md hidden">
+        <div class="glass-panel max-w-2xl w-full p-8 relative border-cyan-500/30">
+            <div id="modal-content" class="text-gray-300 text-sm leading-relaxed"></div>
+            <button onclick="document.getElementById('modal').classList.add('hidden')" class="mt-8 text-[10px] font-bold uppercase tracking-widest text-cyan-400">Close Decryption</button>
+        </div>
+    </div>
+
+    <footer class="bg-black py-20 px-10 border-t border-white/5 mt-20">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
             <div>
-                <div class="text-2xl font-black italic mb-2">HACK<span class="text-purple-500">PS</span></div>
+                <div class="text-2xl font-black italic mb-2">HACK<span class="text-cyan-400">PS</span></div>
                 <p class="text-gray-500 text-xs tracking-widest uppercase">The Blueprint for Strategic Squads</p>
             </div>
-            <div class="text-[10px] text-gray-600 uppercase font-medium tracking-widest text-gray-700">
+            <div class="text-[10px] text-gray-600 uppercase font-medium tracking-widest">
                 © 2026 HackPS Engine. All rights reserved.
             </div>
         </div>
     </footer>
 
     <script>
-        // Scroll reveal + squad cards
+        const BACKEND_URL = "http://localhost:3000";
+
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal-active');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('reveal-active');
             });
         }, { threshold: 0.1 });
 
         let memberCount = 0;
+        const branchOptions = ["Computer Science (CSE)", "Information Tech (IT)", "Electronics (ECE)", "Electrical (EEE)", "Mechanical", "Civil", "Biotech", "Design / Arts", "Business / MBA"];
+        const skillOptions = ["Full Stack Developer", "Frontend Developer", "Backend Developer", "AI/ML Engineer", "Data Scientist", "UI/UX Designer", "Mobile App Dev", "Blockchain Developer", "Cybersecurity Analyst", "Project Manager"];
 
         function addMember() {
             memberCount++;
             const container = document.getElementById('team-container');
-            
             const card = document.createElement('div');
             card.className = "glass-panel p-8 member-card reveal-up reveal-active";
             card.id = `member-${memberCount}`;
             
+            const branchHTML = branchOptions.map(b => `<option value="${b}">${b}</option>`).join('');
+            const skillHTML = skillOptions.map(s => `<option value="${s}">${s}</option>`).join('');
+            
             card.innerHTML = `
                 <div class="flex justify-between items-center mb-6">
-                    <span class="text-purple-500 font-bold tracking-tighter italic uppercase text-sm">Engineer #${memberCount}</span>
+                    <span class="text-cyan-400 font-bold tracking-tighter italic uppercase text-sm">Squad Member #${memberCount}</span>
                     <button onclick="removeMember(${memberCount})" class="remove-btn">Remove</button>
                 </div>
                 <div class="space-y-4">
                     <div>
                         <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Name</label>
-                        <input type="text" placeholder="Member Name" class="input-field">
+                        <input type="text" placeholder="Enter Full Name" class="input-field member-name">
                     </div>
                     <div>
                         <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Branch</label>
-                        <input type="text" placeholder="e.g. IT / Data Science" class="input-field">
+                        <select class="input-field member-branch">
+                            <option value="" disabled selected>Select Branch...</option>
+                            ${branchHTML}
+                        </select>
                     </div>
                     <div>
-                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Skills</label>
-                        <input type="text" placeholder="e.g. Docker, SQL, Golang" class="input-field">
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Past Projects</label>
-                        <textarea placeholder="e.g. Scalable microservices for logistics" class="input-field h-20 resize-none"></textarea>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Primary Role</label>
+                        <select class="input-field member-skills">
+                            <option value="" disabled selected>Select Primary Skill...</option>
+                            ${skillHTML}
+                        </select>
                     </div>
                 </div>
             `;
-            
             container.appendChild(card);
             scrollObserver.observe(card);
         }
 
         function removeMember(id) {
             const member = document.getElementById(`member-${id}`);
-            member.style.opacity = '0';
-            member.style.transform = 'translateY(20px)';
-            setTimeout(() => member.remove(), 400);
+            if(member) {
+                member.style.opacity = '0';
+                member.style.transform = 'translateY(20px)';
+                setTimeout(() => member.remove(), 400);
+            }
         }
 
-        window.onload = () => {
-            for(let i=0; i<4; i++) addMember();
-        };
+        // --- NEW LOGIC: ENHANCED SYNERGY CALCULATION ---
+        function calculateSynergy(members) {
+            const roles = members.map(m => m.skills);
+            const branches = members.map(m => m.branch);
+            const count = members.length;
+            
+            let score = 0;
+            let analysis = "";
+            let mismatchWarnings = [];
+            let multiplier = 1.0;
 
-        document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => scrollObserver.observe(el));
+            const uniqueRoles = new Set(roles).size;
+            const uniqueBranches = new Set(branches).size;
 
-        // MEDIA AGENT CONFIG (same project as open.html)
-        const ONDEMAND_API_KEY = "HHmMbFemXENx1MEoRnq9RKpVRHsKnsUE";   // your key
-        const MEDIA_AGENT_ID = "agent-1768583000";                      // media tool id
-        const ENDPOINT_ID = "predefined-gemini-3.0-pro";
+            // 1. Base Diversity (40 pts)
+            score += (uniqueRoles / count) * 40;
+            // 2. Cross-Pollination (20 pts)
+            score += (uniqueBranches / count) * 20;
+            // 3. Team Size (20 pts)
+            if (count >= 3 && count <= 4) score += 20;
 
-        const FULFILLMENT_PROMPT = `You are the HackPS Media Agent.
-When the user clicks "Generate Problem Visual", you MUST return a single JSON object with a vivid poster idea for their hackathon problem and team.
-
-Use this structure exactly:
-
-{
-  "caption": "...",
-  "description": "...",
-  "style": "..."
-}
-
-Guidelines:
-
-Read the user’s latest message as the team + problem description (members, skills, time, domain, problem statement, vibe).
-
-caption: 1 short punchy title (max 12 words) that could appear as the main text on a poster.
-
-description: 2–3 sentences that describe what should appear in the image (scene, key elements, lighting, emotions, colors). Mention any important entities or themes from the problem (data, climate, fintech, healthcare, etc.).
-
-style: 1 sentence giving visual style hints (e.g. "neon cyberpunk UI dashboard, isometric, dark background, cyan and purple accents" or "clean minimal flat illustration, pastel colors, friendly tech vibe").
-
-Constraints:
-
-Do NOT explain anything outside the JSON.
-
-Do NOT add keys other than caption, description, style.
-
-Do NOT mention HackPS, JSON, or "user" inside the fields.
-
-Make the visual clearly related to the team and problem, and suitable as a hackathon poster or thumbnail.`;
-
-        async function callMediaAgent(problemText) {
-            const url = "https://api.on-demand.io/chat/v1/sessions/query";
-
-            const body = {
-                endpointId: ENDPOINT_ID,
-                query: problemText,
-                agentIds: [MEDIA_AGENT_ID],
-                responseMode: "sync",
-                modelConfigs: {
-                    fulfillmentPrompt: FULFILLMENT_PROMPT,
-                    stopSequences: [],
-                    temperature: 0.7,
-                    topP: 1,
-                    maxTokens: 600,
-                    presencePenalty: 0,
-                    frequencyPenalty: 0
+            // 4. Branch-Skill Alignment Check
+            members.forEach(m => {
+                const isHeavyTech = ["AI/ML Engineer", "Data Scientist", "Blockchain Developer", "Backend Developer"].includes(m.skills);
+                const isNonTechBranch = ["Mechanical", "Civil", "Business / MBA", "Design / Arts"].includes(m.branch);
+                
+                if (isHeavyTech && isNonTechBranch) {
+                    multiplier -= 0.15; // Penalty for role-branch mismatch
+                    mismatchWarnings.push(`${m.name} (${m.branch}) filling ${m.skills}`);
                 }
-            };
-
-            const res = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    apikey: ONDEMAND_API_KEY
-                },
-                body: JSON.stringify(body)
             });
 
-            if (!res.ok) {
-                throw new Error("OnDemand error " + res.status);
+            score = Math.round(score * Math.max(0.4, multiplier));
+            score = Math.min(100, Math.max(10, score));
+
+            // Generate Detailed Feedback
+            if (score < 45) {
+                analysis = `<strong class="text-red-400 uppercase tracking-widest">Structural Instability:</strong> Your team has high role overlap or significant domain mismatch. <br><br> <strong>Weakness:</strong> ${mismatchWarnings.length > 0 ? "Non-technical branches are holding core engineering roles without supporting architecture." : "Redundant skillsets limit your development breadth."} <br><strong>Action:</strong> Recalibrate roles or add specialized technical support.`;
+            } else if (score < 80) {
+                analysis = `<strong class="text-yellow-400 uppercase tracking-widest">Balanced Architecture:</strong> Functional unit with clear definitions. <br><br> <strong>Strength:</strong> Good communication potential. <br><strong>Utilize:</strong> Focus on solving problems within your core branch domain. Avoid over-engineering complex AI/ML unless you have a dedicated specialist.`;
+            } else {
+                analysis = `<strong class="text-purple-500 uppercase tracking-widest">Elite Squad Sync:</strong> High-density technical squad. <br><br> <strong>Strength:</strong> Exceptional cross-disciplinary range. <br><strong>Utilize:</strong> This team can handle "Open Innovation" tracks that require full-stack deployment and complex data logic. You are primed for high-risk projects.`;
             }
 
-            const data = await res.json();
-            const raw = data?.data?.answer || "{}";
-            return JSON.parse(raw);
+            let strength = "WEAK"; let color = "text-red-500";
+            if (score >= 45) { strength = "STABLE"; color = "text-yellow-400"; }
+            if (score >= 80) { strength = "STRONG"; color = "text-cyan-400"; }
+            if (score >= 95) { strength = "ELITE"; color = "text-purple-500"; }
+
+            return { score, strength, color, analysis };
         }
 
-        document
-          .getElementById("generate-ps-visual-btn")
-          .addEventListener("click", async () => {
-            const btn = document.getElementById("generate-ps-visual-btn");
-            const out = document.getElementById("ps-visual-result");
-            const input = document.getElementById("problem-ps-input");
+        async function predictStatements() {
+            const errorMsg = document.getElementById('error-msg');
+            const selectedDomain = document.getElementById('domain-selector').value;
+            const cards = document.querySelectorAll('.member-card');
+            
+            const members = Array.from(cards).map(card => ({
+                name: card.querySelector('.member-name').value.trim(),
+                branch: card.querySelector('.member-branch').value,
+                skills: card.querySelector('.member-skills').value
+            }));
 
-            const text = (input.value || "").trim();
-            if (!text) {
-              out.textContent = "Please paste the problem statement before generating a visual.";
-              return;
+            const isValid = members.every(m => m.name !== "" && m.branch !== "" && m.skills !== "");
+            if (!isValid || members.length === 0) {
+                errorMsg.style.opacity = '1';
+                return;
             }
+            errorMsg.style.opacity = '0';
 
-            btn.disabled = true;
-            btn.textContent = "Generating…";
-            out.textContent = "Calling Media Agent…";
+            const synergyPanel = document.getElementById('synergy-panel');
+            synergyPanel.classList.remove('hidden');
+            
+            const stats = calculateSynergy(members);
+            
+            document.getElementById('synergy-score-display').innerText = stats.score + "%";
+            document.getElementById('capacity-val').innerText = stats.score + "%";
+            document.getElementById('synergy-bar').style.width = stats.score + "%";
+            document.getElementById('synergy-analysis').innerHTML = stats.analysis;
+            
+            const strengthEl = document.getElementById('synergy-strength-display');
+            strengthEl.innerText = stats.strength;
+            strengthEl.className = `text-2xl font-black italic uppercase tracking-tighter ${stats.color}`;
+
+            const section = document.getElementById('prediction-section');
+            section.classList.remove('hidden');
+            section.scrollIntoView({ behavior: 'smooth' });
+            
+            document.getElementById('top-5-container').innerHTML = `<p class="animate-pulse text-gray-500 uppercase text-[10px]">Analyzing Database...</p>`;
 
             try {
-              const visual = await callMediaAgent(text);
-              out.innerHTML = `
-                <div class="bg-purple-500/10 border border-purple-500/30 rounded-2xl p-3 space-y-1">
-                  <div><span class="font-semibold">Caption:</span> ${visual.caption}</div>
-                  <div><span class="font-semibold">Description:</span> ${visual.description}</div>
-                  <div><span class="font-semibold">Style:</span> ${visual.style}</div>
-                </div>
-              `;
-            } catch (e) {
-              out.textContent = "Error generating visual: " + e.message;
-            } finally {
-              btn.disabled = false;
-              btn.textContent = "🎨 Generate Problem Visual";
+                const response = await fetch(`${BACKEND_URL}/api/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domain: selectedDomain, members: members })
+                });
+                const data = await response.json();
+                
+                document.getElementById('top-5-container').innerHTML = data.top5.map((p, i) => `
+                    <div class="glass-panel p-6 border-l-4 border-cyan-400 text-left hover:bg-white/5 transition-all">
+                        <p class="text-[9px] text-cyan-400 font-bold mb-1 uppercase">Idea 0${i+1}</p>
+                        <h4 class="font-bold text-sm mb-4 uppercase text-white">${p}</h4>
+                        <button onclick="viewBrief('${p}')" class="text-[9px] font-black text-white/40 uppercase hover:text-cyan-400">View Brief →</button>
+                    </div>
+                `).join('');
+
+                document.getElementById('suggestions-container').innerHTML = data.extended.map(p => `
+                    <div onclick="viewBrief('${p}')" class="p-4 bg-white/5 rounded-xl border border-white/5 text-[11px] text-gray-400 flex justify-between cursor-pointer hover:bg-white/10 transition-all">
+                        <span>${p}</span><span class="text-purple-500">+</span>
+                    </div>
+                `).join('');
+            } catch (err) {
+                document.getElementById('top-5-container').innerHTML = "<p class='text-red-500 font-bold uppercase text-xs'>Backend Offline</p>";
             }
-          });
+        }
+
+        async function viewBrief(title) {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            content.innerHTML = '<p class="animate-pulse">Decrypting technical brief...</p>';
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/describe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title })
+                });
+                const data = await res.json();
+                content.innerHTML = `
+                    <h3 class="text-xl font-bold text-cyan-400 mb-4 italic uppercase tracking-tighter">${title}</h3>
+                    <p class="leading-relaxed text-gray-300">${data.description || "Unavailable"}</p>
+                `;
+            } catch (err) { content.innerHTML = "Error."; }
+        }
+
+        window.onload = () => { for(let i=0; i<3; i++) addMember(); };
+        document.querySelectorAll('.reveal-left, .reveal-up').forEach(el => scrollObserver.observe(el));
     </script>
 </body>
 </html>
-
