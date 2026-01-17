@@ -18,7 +18,7 @@ https://rishiigamer2201.github.io/Hack-PS/
 
 Most teams lose hours debating ideas and often pick problems that are either too ambitious for the
 timebox or misaligned with their actual skills. That leads to rushed architectures, half-finished demos,
-and submissions that are hard for judges to understand.
+and submissions that are hard for judges to understand and often leads to losing.
 
 HackPS Engine:
 
