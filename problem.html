@@ -51,6 +51,9 @@
             transition: 0.3s;
             width: 100%;
         }
+        
+        select.input-field { cursor: pointer; }
+        option { background: #111; color: white; }
 
         .input-field:focus {
             border-color: var(--neon-purple);
@@ -141,15 +144,26 @@
         <div id="team-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         </div>
 
-        <div class="mt-20 p-10 glass-panel border-cyan-500/20 reveal-up text-center">
-            <h4 class="text-2xl font-bold text-white mb-4 italic">Execution Probability Matrix</h4>
-            <p class="text-gray-400 max-w-3xl mx-auto text-sm">
-                By mapping <span class="text-purple-400 font-bold">Past Projects</span> against the specific Problem Statement domain (FinTech, Health, AI), HackPS calculates a <span class="text-cyan-400 font-bold">Delivery Coefficient</span>. Ensure your skills cover the full spectrum of the prompt.
-            </p>
+        <div id="synergy-matrix" class="mt-20 p-10 glass-panel border-cyan-500/20 reveal-up text-left hidden">
+            <div class="flex flex-col md:flex-row gap-10 items-center">
+                <div class="flex-1">
+                    <h4 class="text-3xl font-black text-white mb-4 italic uppercase tracking-tighter">Synergy <span class="text-cyan-400">Matrix</span></h4>
+                    <div id="synergy-details" class="text-gray-400 text-sm space-y-4">
+                        </div>
+                </div>
+                <div class="text-center p-8 bg-white/5 rounded-3xl border border-white/10 min-w-[200px]">
+                    <div class="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-2">Team Score</div>
+                    <div id="synergy-percent" class="text-6xl font-black text-purple-500 italic">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center">
+            <p id="synergy-error" class="text-red-500 text-xs font-bold uppercase mb-4 hidden">Please enter names and select options for all members</p>
+            <button onclick="calculateSynergy()" class="btn-neon">Generate Synergy Analysis</button>
         </div>
     </section>
 
-    <!-- MEDIA AGENT: PROBLEM STATEMENT VISUAL -->
     <section class="max-w-6xl mx-auto px-6 pb-24">
         <div class="glass-panel p-8 mt-10">
             <h3 class="text-sm font-semibold tracking-[0.2em] uppercase text-cyan-400 mb-2">
@@ -191,7 +205,6 @@ Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk 
     </footer>
 
     <script>
-        // Scroll reveal + squad cards
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -201,15 +214,19 @@ Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk 
         }, { threshold: 0.1 });
 
         let memberCount = 0;
+        const branchOptions = ["CS / IT", "Data Science", "Electronics / EE", "Mechanical / Civil", "Management / Business", "Design / Arts"];
+        const skillOptions = ["Frontend Dev", "Backend Dev", "AI / ML Engineer", "UI / UX Design", "Blockchain", "DevOps / Cloud"];
 
         function addMember() {
             memberCount++;
             const container = document.getElementById('team-container');
-            
             const card = document.createElement('div');
             card.className = "glass-panel p-8 member-card reveal-up reveal-active";
             card.id = `member-${memberCount}`;
             
+            const bOptions = branchOptions.map(b => `<option value="${b}">${b}</option>`).join('');
+            const sOptions = skillOptions.map(s => `<option value="${s}">${s}</option>`).join('');
+
             card.innerHTML = `
                 <div class="flex justify-between items-center mb-6">
                     <span class="text-purple-500 font-bold tracking-tighter italic uppercase text-sm">Engineer #${memberCount}</span>
@@ -218,19 +235,21 @@ Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk 
                 <div class="space-y-4">
                     <div>
                         <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Name</label>
-                        <input type="text" placeholder="Member Name" class="input-field">
+                        <input type="text" placeholder="Member Name" class="input-field mem-name">
                     </div>
                     <div>
                         <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Branch</label>
-                        <input type="text" placeholder="e.g. IT / Data Science" class="input-field">
+                        <select class="input-field mem-branch">
+                            <option value="">Select Branch</option>
+                            ${bOptions}
+                        </select>
                     </div>
                     <div>
                         <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Skills</label>
-                        <input type="text" placeholder="e.g. Docker, SQL, Golang" class="input-field">
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase font-bold text-gray-500 mb-1 block">Past Projects</label>
-                        <textarea placeholder="e.g. Scalable microservices for logistics" class="input-field h-20 resize-none"></textarea>
+                        <select class="input-field mem-skill">
+                            <option value="">Select Primary Skill</option>
+                            ${sOptions}
+                        </select>
                     </div>
                 </div>
             `;
@@ -246,51 +265,81 @@ Problem: Build an AI-driven dashboard that ranks city wards by air-quality risk 
             setTimeout(() => member.remove(), 400);
         }
 
+        function calculateSynergy() {
+            const cards = document.querySelectorAll('.member-card');
+            const error = document.getElementById('synergy-error');
+            const matrix = document.getElementById('synergy-matrix');
+            const details = document.getElementById('synergy-details');
+            const percent = document.getElementById('synergy-percent');
+
+            let members = [];
+            let valid = true;
+
+            cards.forEach(card => {
+                const name = card.querySelector('.mem-name').value;
+                const branch = card.querySelector('.mem-branch').value;
+                const skill = card.querySelector('.mem-skill').value;
+                if(!name || !branch || !skill) valid = false;
+                members.push({ name, branch, skill });
+            });
+
+            if(!valid || members.length === 0) {
+                error.classList.remove('hidden');
+                matrix.classList.add('hidden');
+                return;
+            }
+
+            error.classList.add('hidden');
+            matrix.classList.remove('hidden');
+
+            // Logic: Branch/Skill alignment
+            let totalSynergy = 0;
+            let analysisHtml = "";
+            
+            members.forEach(m => {
+                let mScore = 70; // Base
+                // If branch doesn't typically match skill (e.g. Mech student doing Blockchain)
+                if((m.branch.includes("Mechanical") || m.branch.includes("Civil")) && (m.skill === "AI / ML Engineer" || m.skill === "Blockchain")) {
+                    mScore = 45;
+                } else if(m.branch.includes("CS") || m.branch.includes("Data Science")) {
+                    mScore = 90;
+                }
+                totalSynergy += mScore;
+            });
+
+            const avg = Math.round(totalSynergy / members.length);
+            percent.innerText = avg + "%";
+
+            if(avg > 80) {
+                analysisHtml = `<p><strong>Team Strength:</strong> High Domain-Skill alignment. Your team members are operating within their native technical fields.</p>
+                               <p><strong>Utilization:</strong> Leverage the ${members[0].skill} expert to set the architecture. Synergy is strong enough for high-speed development.</p>`;
+            } else if(avg > 50) {
+                analysisHtml = `<p><strong>Team Strength:</strong> Moderate. There is a mix of cross-domain talent.</p>
+                               <p><strong>How to utilize:</strong> Ensure the team communicates technical constraints clearly, as some members are working across different specializations.</p>`;
+            } else {
+                analysisHtml = `<p><strong>Team Strength:</strong> Weak. High risk of technical friction due to branch-skill mismatch.</p>
+                               <p><strong>Warning:</strong> The synergy is low because technical roles are being handled by members outside their primary branch. Focus on simpler implementations to avoid bugs.</p>`;
+            }
+
+            details.innerHTML = analysisHtml;
+            matrix.scrollIntoView({ behavior: 'smooth' });
+        }
+
         window.onload = () => {
             for(let i=0; i<4; i++) addMember();
         };
 
         document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => scrollObserver.observe(el));
 
-        // MEDIA AGENT CONFIG (same project as open.html)
-        const ONDEMAND_API_KEY = "HHmMbFemXENx1MEoRnq9RKpVRHsKnsUE";   // your key
-        const MEDIA_AGENT_ID = "agent-1768583000";                      // media tool id
+        // MEDIA AGENT CONFIG
+        const ONDEMAND_API_KEY = "HHmMbFemXENx1MEoRnq9RKpVRHsKnsUE";
+        const MEDIA_AGENT_ID = "agent-1768583000";
         const ENDPOINT_ID = "predefined-gemini-3.0-pro";
 
-        const FULFILLMENT_PROMPT = `You are the HackPS Media Agent.
-When the user clicks "Generate Problem Visual", you MUST return a single JSON object with a vivid poster idea for their hackathon problem and team.
-
-Use this structure exactly:
-
-{
-  "caption": "...",
-  "description": "...",
-  "style": "..."
-}
-
-Guidelines:
-
-Read the user’s latest message as the team + problem description (members, skills, time, domain, problem statement, vibe).
-
-caption: 1 short punchy title (max 12 words) that could appear as the main text on a poster.
-
-description: 2–3 sentences that describe what should appear in the image (scene, key elements, lighting, emotions, colors). Mention any important entities or themes from the problem (data, climate, fintech, healthcare, etc.).
-
-style: 1 sentence giving visual style hints (e.g. "neon cyberpunk UI dashboard, isometric, dark background, cyan and purple accents" or "clean minimal flat illustration, pastel colors, friendly tech vibe").
-
-Constraints:
-
-Do NOT explain anything outside the JSON.
-
-Do NOT add keys other than caption, description, style.
-
-Do NOT mention HackPS, JSON, or "user" inside the fields.
-
-Make the visual clearly related to the team and problem, and suitable as a hackathon poster or thumbnail.`;
+        const FULFILLMENT_PROMPT = `You are the HackPS Media Agent. Return JSON with caption, description, style.`;
 
         async function callMediaAgent(problemText) {
             const url = "https://api.on-demand.io/chat/v1/sessions/query";
-
             const body = {
                 endpointId: ENDPOINT_ID,
                 query: problemText,
@@ -298,66 +347,39 @@ Make the visual clearly related to the team and problem, and suitable as a hacka
                 responseMode: "sync",
                 modelConfigs: {
                     fulfillmentPrompt: FULFILLMENT_PROMPT,
-                    stopSequences: [],
                     temperature: 0.7,
-                    topP: 1,
-                    maxTokens: 600,
-                    presencePenalty: 0,
-                    frequencyPenalty: 0
+                    maxTokens: 600
                 }
             };
-
             const res = await fetch(url, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    apikey: ONDEMAND_API_KEY
-                },
+                headers: { "Content-Type": "application/json", apikey: ONDEMAND_API_KEY },
                 body: JSON.stringify(body)
             });
-
-            if (!res.ok) {
-                throw new Error("OnDemand error " + res.status);
-            }
-
             const data = await res.json();
-            const raw = data?.data?.answer || "{}";
-            return JSON.parse(raw);
+            return JSON.parse(data?.data?.answer || "{}");
         }
 
-        document
-          .getElementById("generate-ps-visual-btn")
-          .addEventListener("click", async () => {
+        document.getElementById("generate-ps-visual-btn").addEventListener("click", async () => {
             const btn = document.getElementById("generate-ps-visual-btn");
             const out = document.getElementById("ps-visual-result");
             const input = document.getElementById("problem-ps-input");
-
             const text = (input.value || "").trim();
-            if (!text) {
-              out.textContent = "Please paste the problem statement before generating a visual.";
-              return;
-            }
+
+            if (!text) { out.textContent = "Please paste the problem statement."; return; }
 
             btn.disabled = true;
             btn.textContent = "Generating…";
-            out.textContent = "Calling Media Agent…";
-
             try {
-              const visual = await callMediaAgent(text);
-              out.innerHTML = `
-                <div class="bg-purple-500/10 border border-purple-500/30 rounded-2xl p-3 space-y-1">
-                  <div><span class="font-semibold">Caption:</span> ${visual.caption}</div>
-                  <div><span class="font-semibold">Description:</span> ${visual.description}</div>
-                  <div><span class="font-semibold">Style:</span> ${visual.style}</div>
-                </div>
-              `;
-            } catch (e) {
-              out.textContent = "Error generating visual: " + e.message;
-            } finally {
-              btn.disabled = false;
-              btn.textContent = "🎨 Generate Problem Visual";
-            }
-          });
+                const visual = await callMediaAgent(text);
+                out.innerHTML = `<div class="bg-purple-500/10 border border-purple-500/30 rounded-2xl p-3">
+                    <div><b>Caption:</b> ${visual.caption}</div>
+                    <div><b>Description:</b> ${visual.description}</div>
+                    <div><b>Style:</b> ${visual.style}</div>
+                </div>`;
+            } catch (e) { out.textContent = "Error: " + e.message; }
+            finally { btn.disabled = false; btn.textContent = "🎨 Generate Problem Visual"; }
+        });
     </script>
 </body>
 </html>
