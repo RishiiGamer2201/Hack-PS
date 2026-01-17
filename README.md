@@ -1,11 +1,12 @@
 ```markdown
-# Cracking Hackathon – Cracking Hackathon Problem Statements
+# Cracking Hackathon
 
 HackPS Engine is a web-based AI copilot that helps hackathon teams answer one question:
 
 > “Which problem statement are we actually built to win in 24 hours?”
 
-It analyses team skills, time constraints, and domain fit using a set of OnDemand AI agents (including a Gemini-powered Media tool) and then surfaces strategy recommendations plus poster-ready visual briefs.
+It analyses team skills, time constraints, and domain fit using a set of OnDemand AI agents (including
+a Gemini-powered Media tool) and then surfaces strategy recommendations plus poster-ready visual briefs.
 
 
 ## 🚀 Live Demo
