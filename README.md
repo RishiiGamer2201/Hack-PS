@@ -11,7 +11,7 @@ a Gemini-powered Media tool) and then surfaces strategy recommendations plus pos
 
 ## 🚀 Live Demo
 
-TODO: Add deployed link or Loom walkthrough
+https://rishiigamer2201.github.io/Hack-PS/
 
 
 ## 🧩 What It Solves
